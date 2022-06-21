@@ -1,0 +1,52 @@
+# created with help from these web pages:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+# github: mathomp4/PreciseSum
+# https://github.community/t/can-github-actions-directly-edit-files-in-a-repository/17884
+# https://github.community/t/github-actions-to-make-changes-to-a-file/132819/2
+
+# right now, this workflow will compile one specific .md file
+# in future, we can modify this workflow to compile a whole folder of .md files. 
+# (perhaps with a time stamp check or makefile?)
+
+
+name: md_gen
+
+on: [push]
+
+jobs:
+  markdown_job_1:           # job id
+    name: Markdown Job 1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Git Config
+        run: |
+          git config --global user.name "mal2994"
+          git config --global user.email "mal2994@calu.edu"
+
+      - name: run ls command # for debugging
+        run: ls -al
+
+      - name: C Re-compilation
+        run: gcc doq.c -o doq
+        # todo: create precompiled binary. first attempt yielded this error:
+        # https://github.com/mal2994/doq/runs/6976795084?check_suite_focus=true
+        # /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34' not found
+        # https://github.com/atanunq/viu/issues/68#issuecomment-892120803
+
+      - name: Compile .md using doq
+        run: |                # you could include .css below:
+          ./doq index.md > index.html
+
+      - name: Stage changed files
+        run: git add -A
+
+      - name: Show changes
+        run: git status
+
+      - name: Commit changed files
+        run: git commit -m 'Auto updating markdown files'
+
+      - name: Push code to master
+        run: git push

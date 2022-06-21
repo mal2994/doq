@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-
 enum {
   PRE    = 1 << 0,
   CODE   = 1 << 1,
@@ -201,7 +200,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  fprintf(stdout, "<html><head><style>");
+  fprintf(stdout, "<html><head><meta charset=\"utf-8\"><style>");
   if (css) {
     write_fp(stdout, css);
   } else {
